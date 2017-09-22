@@ -4,6 +4,7 @@ import query_parser
 import jira
 import jira_login
 import jira_query
+import jira_database
 import subprocess
 
 def exit():
@@ -30,6 +31,7 @@ def display_help():
 	print 'reload : loads a default set of queries into the query storage'
 	print 'export : exports the db file into multiple csv files for each table'
 	print 'bash : execute commands on the server'
+	print 'drop : drops a table in the database'
 
 # Runs the command to query the JQL server to retrieve the issues
 def run_query(queryName):
@@ -78,13 +80,13 @@ def run_delete(queryName):
 
 # Exports the .db file into .csv files
 def run_export():
-	print 'Exporting .db file to multiple .csv files'
-	if os.path.exists('/lib/convert-db-to-csv/convert-db-to-csv.sh'):
-		print '--CSV exists--'
-	else:
-		print '--CSV does not exist--'
-	output = subprocess.Popen(["/lib/convert-db-to-csv/convert-db-to-csv.sh", "/usr/share/jira/database.db", "/usr/share/jira"])
-	#print 'Return code : ' + str(output)
+	print 'Exporting database to csv files in volume: /usr/share/jira'
+	output = subprocess.call(["/lib/convert-db-to-csv/convert-db-to-csv.sh", "/usr/share/jira/database.db", "/usr/share/jira"])
+	print "Export exited with code: " + str(output)
+
+# Removes a table in the database file
+def run_drop(tableName):
+	jira_database.drop_table(tableName)
 
 # Exports the .db file into .csv files
 def run_bash():
@@ -123,6 +125,8 @@ def check_input(data):
 		run_export()
 	elif firstArg == 'bash':
 		run_bash()
+	elif firstArg == 'drop':
+		second_arg_check(split, run_drop)
 	return True
 
 jira = jira_login.login()

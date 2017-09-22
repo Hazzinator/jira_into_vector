@@ -4,11 +4,13 @@ import os.path
 
 path = '/usr/share/jira/commands.txt'
 
-
+# Opens a new file, overwriting any existing one in the directory
 def create_file():
 	file = open(path, "w+")
 	file.close()
 
+# Gets the queries from a text file specified by a parameter. If no parameter, then just uses
+# the default path variable
 def get_queries(path=path):
 	if not os.path.exists(path):
 		create_file()
@@ -21,6 +23,7 @@ def get_queries(path=path):
 		data[split[0]] = split[1].rstrip()
 	return data
 
+# Creates a new query with a query name in the custom text file
 def create_query(queryName, query):
 	with open(path, 'a+') as f:
 		f.write(queryName + ';' + query + '\n')
