@@ -7,6 +7,16 @@ import jira_query
 import jira_database
 import subprocess
 
+def start():
+	# list of options []
+	inloop = True
+	while (inloop):
+		print '\nType help for a list of commands.'
+		sys.stdout.write(': ')
+		data = raw_input()
+		# Parse out arguments
+		inloop = check_input(data)
+
 def exit():
 	sys.exit(0)
 
@@ -29,7 +39,7 @@ def display_help():
 	print 'run name : runs the query where name is the name of the query to run'
 	print 'delete name : deletes the query with the specified name'
 	print 'reload : loads a default set of queries into the query storage'
-	print 'export : exports the db file into multiple csv files for each table'
+	print 'export : exports the db file into a form that can be read by the '
 	print 'bash : execute commands on the server'
 	print 'drop : drops a table in the database'
 
@@ -44,19 +54,15 @@ def run_query(queryName):
 
 # Runs the command to store a new text file
 def run_create(queryName):
-	confirmJQL = False
-	query = None
-	while not confirmJQL:
-		print 'Creating a query with name -' + queryName + '-'
-		print 'Please enter the JQL statement to bind to it below:'
-		query = raw_input()
-		print 'The query you entered is:'
-		print query
-		print '\nIs this correct? (y/n)'
-		answer = raw_input()
-		if answer == 'y' or answer == 'Y':
-			confirmJQL = True
-	query_parser.create_query(queryName, query)
+	print 'Creating a query with name -' + queryName + '-'
+	print 'Please enter the JQL statement to bind to it below:'
+	query = raw_input()
+	print 'The query you entered is:'
+	print query
+	print '\nIs this correct? (y/n)'
+	answer = raw_input()
+	if answer == 'Y' or answer == 'y':
+		query_parser.create_query(queryName, query)
 
 def run_reload():
 	print 'Are you sure you want to reload default queries? (y/n)'
@@ -78,7 +84,7 @@ def run_delete(queryName):
 		query_parser.load_in_queries(queries)
 		print queryName + ' has been deleted'
 
-# Exports the .db file into .csv files
+# Exports the .db file into .csv files. Calls a library script
 def run_export():
 	print 'Exporting database to csv files in volume: /usr/share/jira'
 	output = subprocess.call(["/lib/convert-db-to-csv/convert-db-to-csv.sh", "/usr/share/jira/database.db", "/usr/share/jira"])
@@ -130,11 +136,4 @@ def check_input(data):
 	return True
 
 jira = jira_login.login()
-# list of options []
-inloop = True
-while (inloop):
-	print '\nType help for a list of commands.'
-	sys.stdout.write(': ')
-	data = raw_input()
-	# Parse out arguments
-	inloop = check_input(data)
+start()
