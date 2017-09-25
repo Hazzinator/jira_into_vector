@@ -40,7 +40,6 @@ def recreate_table(tableName):
 def update_table(tableName, issues):
 	recreate_table(tableName)
 	# executemany will perform an SQL action on all items of a list
-	print issues
 	cursor.executemany('''INSERT INTO '''+tableName+'''(snapshot_date, key, summary, status, assignee, priority, created, hubble_team, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''', issues)
 	print '-Table '+ tableName + ' updated-'
 
