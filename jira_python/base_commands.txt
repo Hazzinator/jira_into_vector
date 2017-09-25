@@ -1,20 +1,20 @@
-hubbleCandidateBlockers;project = HU AND issuetype = bug AND resolution = Unresolved AND (labels not in (Bug_Backlog) OR labels is EMPTY) OR project = "Avalon Team" AND issuetype = bug AND resolution = Unresolved AND (labels not in (Bug_Backlog) OR labels is EMPTY) ORDER BY created DESC, Severity, priority
-nonRCTBlockersHUAndNPAT;project = HU AND issuetype = bug AND priority = Expedite AND status != Done OR project = "Avalon Team" AND issuetype = bug AND priority = Expedite AND status != done OR project = HU AND status != Done AND issuetype = bug AND resolution = Unresolved AND labels in (AutomationFailTestCase, Designer_Automation_Testing, AnalyticsAutomationFail) AND createdDate > "2016/12/10" ORDER BY Severity ASC, priority DESC
-3rdLineEscalated;project = "3rd Line" AND component = Bugs AND (priority = Expedite OR Attributes = "Release Blocker") AND status != Done AND affectedVersion not in ("2016.1 SP1", "2016.1 SP2")
-3rdLineR31R32;project = "3rd Line" AND component = Bugs AND (fixVersion in (2016.1.0.31) OR fixVersion in (2016.1.0.32)) ORDER BY fixVersion
-allBugsSAP;project = SFH AND issuetype = Bug
-allDevDoneThisSprint;project = KA AND (labels is EMPTY OR labels not in (AutoStory)) AND status in ("Waiting for QA", "Exploratory Testing", "Waiting for TC Review", "Review & Update TCs", "Waiting for Auto QA", "Automated Testing", Done) AND status was in (Backlog, "Build It", "Waiting for Review", Review, "Waiting for Update") after 2017-6-21 AND type = Story ORDER BY summary ASC
-backlogForPlanning;project = HU AND ("Hubble Team" = "Team Undetermined" OR "Hubble Team" is EMPTY) AND status != Done ORDER BY Rank DESC
-blockerAndAutoFail;project = HU AND issuetype = bug AND priority = Expedite AND resolution = EMPTY OR project = HU AND issuetype = bug AND resolution = Unresolved AND (labels in (AutomationFailTestCase, Designer_Automation_Testing, RCT, AnalyticsAutomationFail) OR summary ~ RCT) OR project = "Avalon Team" AND issuetype = bug AND priority = Expedite OR project = "3rd Line" AND issuetype = bug AND priority = Expedite AND attributes in ("release blocker") OR project = "SAP for Hubble" AND issuetype = bug AND priority = Expedite AND attributes in ("release blocker") ORDER BY Severity ASC, priority DESC, created DESC
-blockersAndFormalBlockers;project = HU AND issuetype = Bug AND Severity in (A, B) AND priority in (Expedite) ORDER BY Rank DESC
-bugBacklogST;project = HU AND issuetype = bug AND resolution = Unresolved AND labels != RCT AND labels in (BUG_BACKLOG) AND ("Hubble Team" is EMPTY OR "Hubble Team" = "Team Undetermined") ORDER BY Severity ASC, priority DESC, created DESC
+hubble_candidate_blockers;project = HU AND issuetype = bug AND resolution = Unresolved AND (labels not in (Bug_Backlog) OR labels is EMPTY) OR project = "Avalon Team" AND issuetype = bug AND resolution = Unresolved AND (labels not in (Bug_Backlog) OR labels is EMPTY) ORDER BY created DESC, Severity, priority
+non_rct_blockers_hu_and_npat;project = HU AND issuetype = bug AND priority = Expedite AND status != Done OR project = "Avalon Team" AND issuetype = bug AND priority = Expedite AND status != done OR project = HU AND status != Done AND issuetype = bug AND resolution = Unresolved AND labels in (AutomationFailTestCase, Designer_Automation_Testing, AnalyticsAutomationFail) AND createdDate > "2016/12/10" ORDER BY Severity ASC, priority DESC
+third_line_escalated;project = "3rd Line" AND component = Bugs AND (priority = Expedite OR Attributes = "Release Blocker") AND status != Done AND affectedVersion not in ("2016.1 SP1", "2016.1 SP2")
+third_line_r31_r32;project = "3rd Line" AND component = Bugs AND (fixVersion in (2016.1.0.31) OR fixVersion in (2016.1.0.32)) ORDER BY fixVersion
+all_bugs_sap;project = SFH AND issuetype = Bug
+all_dev_done_this_sprint;project = KA AND (labels is EMPTY OR labels not in (AutoStory)) AND status in ("Waiting for QA", "Exploratory Testing", "Waiting for TC Review", "Review & Update TCs", "Waiting for Auto QA", "Automated Testing", Done) AND status was in (Backlog, "Build It", "Waiting for Review", Review, "Waiting for Update") after 2017-6-21 AND type = Story ORDER BY summary ASC
+backlog_for_planning;project = HU AND ("Hubble Team" = "Team Undetermined" OR "Hubble Team" is EMPTY) AND status != Done ORDER BY Rank DESC
+blocker_and_auto_fail;project = HU AND issuetype = bug AND priority = Expedite AND resolution = EMPTY OR project = HU AND issuetype = bug AND resolution = Unresolved AND (labels in (AutomationFailTestCase, Designer_Automation_Testing, RCT, AnalyticsAutomationFail) OR summary ~ RCT) OR project = "Avalon Team" AND issuetype = bug AND priority = Expedite OR project = "3rd Line" AND issuetype = bug AND priority = Expedite AND attributes in ("release blocker") OR project = "SAP for Hubble" AND issuetype = bug AND priority = Expedite AND attributes in ("release blocker") ORDER BY Severity ASC, priority DESC, created DESC
+blockers_and_formal_blockers;project = HU AND issuetype = Bug AND Severity in (A, B) AND priority in (Expedite) ORDER BY Rank DESC
+bug_backlog_st;project = HU AND issuetype = bug AND resolution = Unresolved AND labels != RCT AND labels in (BUG_BACKLOG) AND ("Hubble Team" is EMPTY OR "Hubble Team" = "Team Undetermined") ORDER BY Severity ASC, priority DESC, created DESC
 bugs;project = HU AND issuetype = Bug ORDER BY cf[11200] ASC, Rank DESC
-bugsFromJiraNowResolved;project = HU AND labels not in (Bug_Backlog) AND "TFS URL" is EMPTY AND resolution is not EMPTY ORDER BY Rank DESC
-bugsFromJira;project = HU AND issuetype = bug AND "TFS URL" is EMPTY ORDER BY created ASC, Rank DESC
-bugsWithHubbleComponent;project = HU AND "Hubble Component" is not EMPTY ORDER BY Rank DESC
-bugsWithHubbleComponentUnresolved;project = HU AND "Hubble Component" is not EMPTY AND resolution is EMPTY ORDER BY Rank DESC
-bugsWithHubbleComponentFromLastMonth;project = HU AND "Hubble Component" is not EMPTY AND createdDate > -28d ORDER BY Rank DESC
-bugsWithRootCause;project = HU AND "Root Cause" is not EMPTY ORDER BY Rank DESC
-openBugsSinceDec2016;project = HU AND issuetype = Bug AND status in ("In Progress", Backlog, "Selected for Development", "DoD fulfilment", "Waiting for QA", "In QA") AND created >= 2016-12-10
-currentReleaseBlockers;Attributes in ("Release Blocker") AND resolution = Unresolved
-DPKanbanBoardHideStaleDone;project = DP AND (status != Done OR status = Done AND (resolutionDate > -1d OR fixVersion is not EMPTY)) ORDER BY Rank ASC
+bugs_from_jira_now_resolved;project = HU AND labels not in (Bug_Backlog) AND "TFS URL" is EMPTY AND resolution is not EMPTY ORDER BY Rank DESC
+bugs_from_jira;project = HU AND issuetype = bug AND "TFS URL" is EMPTY ORDER BY created ASC, Rank DESC
+bugs_hubble_component;project = HU AND "Hubble Component" is not EMPTY ORDER BY Rank DESC
+bugs_hubble_component_unresolved;project = HU AND "Hubble Component" is not EMPTY AND resolution is EMPTY ORDER BY Rank DESC
+bugs_hubble_component_last_month;project = HU AND "Hubble Component" is not EMPTY AND createdDate > -28d ORDER BY Rank DESC
+bugs_with_root_cause;project = HU AND "Root Cause" is not EMPTY ORDER BY Rank DESC
+open_bugs_since_dec_2016;project = HU AND issuetype = Bug AND status in ("In Progress", Backlog, "Selected for Development", "DoD fulfilment", "Waiting for QA", "In QA") AND created >= 2016-12-10
+release_blockers;Attributes in ("Release Blocker") AND resolution = Unresolved
+dp_kanban_board_hide_stale_done;project = DP AND (status != Done OR status = Done AND (resolutionDate > -1d OR fixVersion is not EMPTY)) ORDER BY Rank ASC
