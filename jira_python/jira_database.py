@@ -10,26 +10,21 @@ def drop_table(tableName):
 	try:
 		cursor.execute('''DROP TABLE '''+tableName)
 		print '-Table ' + tableName + ' dropped-'
-	except sqlite3.OperationalError:
-		print '-Table '+ tableName + ' does not exist-'
+	except sqlite3.OperationalError as e:
+		print e
+		print '-Table '+ tableName + ' could not be dropped-'
 
 # All issues have the same fields, so the only customisable aspect is the name of the table
 # Protect against injection?
 def create_table(tableName):
 	try:
-		cursor.execute('''CREATE TABLE ''' + tableName + '''(snapshot_date VARCHAR(100), 
+		cursor.execute('''CREATE TABLE ''' + tableName + '''(snapshot_date DATETIME, 
 		key VARCHAR(12) PRIMARY KEY, summary VARCHAR(5000), status VARCHAR(20), 
-		assignee VARCHAR(50), priority VARCHAR(20), created VARCHAR(100), 
-		hubble_team VARCHAR(100), last_updated VARCHAR(100))''')
+		assignee VARCHAR(50), priority VARCHAR(20), created DATETIME, 
+		hubble_team VARCHAR(100), last_updated DATETIME)''')
 		print '-Table ' + tableName + ' created-'
-	except sqlite3.OperationalError:
-		print '-Table ' + tableName + ' already exists'
-
-
-#def create_table(tableName):
-#	with open(tableName+".csv", 'wb') as file:
-#		wr = csv.writer(file, quoting=csv.QUOTE_ALL)
-#		wr.writerow(mylist)
+	except sqlite3.OperationalError as e:
+		print '-Table ' + tableName + ' could not be created'
 
 def recreate_table(tableName):
 	drop_table(tableName)
@@ -40,6 +35,7 @@ def recreate_table(tableName):
 def update_table(tableName, issues):
 	recreate_table(tableName)
 	# executemany will perform an SQL action on all items of a list
-	cursor.executemany('''INSERT INTO '''+tableName+'''(snapshot_date, key, summary, status, assignee, priority, created, hubble_team, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''', issues)
+	cursor.executemany('''INSERT INTO '''+tableName+'''(snapshot_date, key, summary, status, assignee, priority, created, hubble_team, last_updated) 
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''', issues)
 	print '-Table '+ tableName + ' updated-'
 

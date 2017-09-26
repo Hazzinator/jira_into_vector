@@ -1,7 +1,8 @@
 # required imports
 from jira import JIRA
 from jira import JIRAError
-from datetime import datetime
+from time import gmtime, strftime
+import datetime
 import getpass
 import sys
 import jira_database as database
@@ -24,11 +25,22 @@ def none_creator(field, property):
 	else:
 		return getattr(field, property)
 
+# converts a jira date into a valid SQL format
+def datetime_format(date):
+	# x[2:] cut off the first two characters
+	# x[:2] cut off everything but the first two characters
+	dateStart = date[:10]
+	dateEnd = (date[11:])[:8]
+	dateNew = dateStart + " " + dateEnd
+	print dateNew
+	return dateNew
+
 # parses a list of issues into a list of tuples that can be inserted straight into a database
 def parse_issues(issues):
 	# the tuple list to return
 	issueList = []
 	snapshot = create_snapshot()
+	tformat = True
 	for issue in issues:
 		fields = issue.fields
 		key = issue.key
@@ -36,16 +48,17 @@ def parse_issues(issues):
 		assignee = none_creator(fields.assignee, 'displayName')
 		priority = none_creator(fields.priority, 'name')
 		status = none_creator(fields.status, 'name')
-		#status = fields.status.name
-		created = fields.created
 		hubbleTeam = fields.project.name
-		lastUpdated = fields.updated
+		# ISO-8601 format for date
+		lastUpdated = datetime_format(fields.updated)
+		created = datetime_format(fields.created)
 		issueList.append((snapshot, key, summary, status, assignee, priority, created, hubbleTeam, lastUpdated))
+		print str(snapshot) + " / " + created + " / " + lastUpdated
 	return issueList
 
 # creates a string in the form of a date that is used to identify when this code was last run
 def create_snapshot():
-	return str(datetime.now())
+	return strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
 # Returns a list of issues specified by a JQL query. If the JQL Query is incorrect then it won't return anything
 def jql_search(query, jira):
