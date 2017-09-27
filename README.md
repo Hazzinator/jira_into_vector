@@ -5,7 +5,14 @@ in the form of .csv files. This will be accomplished using a shared docker volum
 2. A script that will automatically move .csv files onto the Accelerator, and then runs a script that will import 
 them into the database.
 
-For the second script to work, it requires that you store the public SSH key of your workstation on your Accelerator.
-A public key can be generated via PuTTY on a Windows machine, and through the ssh command on a Linux machine. 
+REST API
+Stateless, rather than having to share the state of the webpage with every client who wants to connect to it.
+Read up on it
 
-The public key should be stored in the ~/.ssh/authorized-keys file on the Accelerator.
+Ghetto Solution
+To get step two working, a simple script will have to be made that will allow the user to enter their username and
+password, and then copy the entire shared Docker directory to the Accelerator. Then, a script will have to be ran
+on the accelerator that creates a new schema for the files to exist under. It will then import all of the .csv files
+into the database using the vwword command. A script should be made that loops through all the names (.csv) and runs
+the script on them with the correct schema.
+

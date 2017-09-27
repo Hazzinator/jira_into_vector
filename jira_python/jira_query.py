@@ -25,14 +25,13 @@ def none_creator(field, property):
 	else:
 		return getattr(field, property)
 
-# converts a jira date into a valid SQL format
+# Converts an ISO-8601 date into a valid SQL date format
 def datetime_format(date):
 	# x[2:] cut off the first two characters
 	# x[:2] cut off everything but the first two characters
 	dateStart = date[:10]
 	dateEnd = (date[11:])[:8]
 	dateNew = dateStart + " " + dateEnd
-	print dateNew
 	return dateNew
 
 # parses a list of issues into a list of tuples that can be inserted straight into a database
@@ -49,11 +48,10 @@ def parse_issues(issues):
 		priority = none_creator(fields.priority, 'name')
 		status = none_creator(fields.status, 'name')
 		hubbleTeam = fields.project.name
-		# ISO-8601 format for date
+		# both of these are in ISO 8601 format
 		lastUpdated = datetime_format(fields.updated)
 		created = datetime_format(fields.created)
 		issueList.append((snapshot, key, summary, status, assignee, priority, created, hubbleTeam, lastUpdated))
-		print str(snapshot) + " / " + created + " / " + lastUpdated
 	return issueList
 
 # creates a string in the form of a date that is used to identify when this code was last run
