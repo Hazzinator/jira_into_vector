@@ -33,15 +33,16 @@ def printj_queries():
 		print
 
 def display_help():
-	print 'exit : exits the program'
+	print '\nexit : exits the program'
 	print 'print : displays the queries that can be ran'
 	print 'printj : displays the queries along with their JQL commands'
-	print 'run name : runs the query where name is the name of the query to run'
-	print 'delete name : deletes the query with the specified name'
+	print 'run "name" : runs the query where name is the name of the query to run'
+	print 'delete "name" : deletes the query with the specified name'
 	print 'reload : loads a default set of queries into the query storage'
-	print 'export : exports the db file into a form that can be read by the '
-	print 'bash : execute commands on the server'
-	print 'drop : drops a table in the database'
+	print 'list : lists the names of all the tables currently in the database file'
+	print 'drop "table": drops a table in the database'
+	print 'export : exports the db file into multiple csv files'
+	print 'bash : execute a shell on the container'
 
 # Runs the command to query the JQL server to retrieve the issues
 def run_query(queryName):
@@ -79,7 +80,7 @@ def run_delete(queryName):
 	queries = query_parser.get_queries()
 	# Attempt to remove the query with that name from the internal dictionary
 	if queries.pop(queryName, None) is None:
-		print 'A query by that name does not exist, please type in print_q to see the list of queries.'
+		print 'A query by that name does not exist, please type in print to see the list of available queries.'
 	else:
 		query_parser.load_in_queries(queries)
 		print queryName + ' has been deleted'
@@ -89,6 +90,12 @@ def run_export():
 	print 'Exporting database to csv files in volume: /usr/share/jira'
 	output = subprocess.call(["/lib/convert-db-to-csv/convert-db-to-csv.sh", "/usr/share/jira/database.db", "/usr/share/jira"])
 	print "Export exited with code: " + str(output)
+
+def run_list():
+	print 'Fetching list of all tables:'
+	tables = jira_database.get_table_names()
+	for table in tables:
+		print table.__str__().strip("'()[],")[2:]
 
 # Removes a table in the database file
 def run_drop(tableName):
@@ -117,12 +124,6 @@ def check_input(data):
 		display_help()
 	elif firstArg == 'print':
 		print_queries()
-	elif firstArg == 'run':
-		second_arg_check(split, run_query)
-	elif firstArg == 'create':
-		second_arg_check(split, run_create)
-	elif firstArg == 'delete':
-		second_arg_check(split, run_delete)
 	elif firstArg == 'reload':
 		run_reload()
 	elif firstArg == 'printj':
@@ -133,6 +134,14 @@ def check_input(data):
 		run_bash()
 	elif firstArg == 'drop':
 		second_arg_check(split, run_drop)
+	elif firstArg == 'list':
+		run_list()
+	elif firstArg == 'run':
+		second_arg_check(split, run_query)
+	elif firstArg == 'create':
+		second_arg_check(split, run_create)
+	elif firstArg == 'delete':
+		second_arg_check(split, run_delete)
 	return True
 
 jira = jira_login.login()

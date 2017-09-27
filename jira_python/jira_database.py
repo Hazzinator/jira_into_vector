@@ -30,6 +30,11 @@ def recreate_table(tableName):
 	drop_table(tableName)
 	create_table(tableName)
 
+# Returns a list of all tables in the database at the moment
+def get_table_names():
+	cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+	return cursor.fetchall()
+
 # Updates the issues in a table.
 # An issue should be in the form (date, key, summary, status, assignee, priority, created, hubble_team, last_updated)
 def update_table(tableName, issues):
