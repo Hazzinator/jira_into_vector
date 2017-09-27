@@ -1,1 +1,1 @@
-C:\Docker\esdata\
+C:\Docker\jira\tables

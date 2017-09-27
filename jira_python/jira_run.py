@@ -7,6 +7,14 @@ import jira_query
 import jira_database
 import subprocess
 
+dbToCsvScript = '/lib/convert-db-to-csv/convert-db-to-csv.sh'
+shareFolder = '/usr/share/jira/'
+installFolder = '/home/jira_python/'
+tableFolder = shareFolder + 'tables/'
+databaseFile = shareFolder + 'database.db'
+commandsFile = shareFolder + 'commands.txt'
+baseCommandsFile = installFolder + 'base_commands.txt'
+
 def start():
 	# list of options []
 	inloop = True
@@ -21,12 +29,12 @@ def exit():
 	sys.exit(0)
 
 def print_queries():
-	queries = query_parser.get_queries()
+	queries = query_parser.get_queries(commandsFile)
 	for key, value in queries.iteritems():
 		print key
 
 def printj_queries():
-	queries = query_parser.get_queries()
+	queries = query_parser.get_queries(commandsFile)
 	for key, value in queries.iteritems():
 		print key
 		print value
@@ -37,6 +45,7 @@ def display_help():
 	print 'print : displays the queries that can be ran'
 	print 'printj : displays the queries along with their JQL commands'
 	print 'run "name" : runs the query where name is the name of the query to run'
+	print 'create "name": starts the creation of a new jql query'
 	print 'delete "name" : deletes the query with the specified name'
 	print 'reload : loads a default set of queries into the query storage'
 	print 'list : lists the names of all the tables currently in the database file'
@@ -44,9 +53,9 @@ def display_help():
 	print 'export : exports the db file into multiple csv files'
 	print 'bash : execute a shell on the container'
 
-# Runs the command to query the JQL server to retrieve the issues
+# Runs the a saved JQL query and stores the results in the database file.
 def run_query(queryName):
-	queries = query_parser.get_queries()
+	queries = query_parser.get_queries(commandsFile)
 	try:
 		query = queries[queryName]
 		jira_query.run_command(jira, queryName, query)
@@ -63,36 +72,38 @@ def run_create(queryName):
 	print '\nIs this correct? (y/n)'
 	answer = raw_input()
 	if answer == 'Y' or answer == 'y':
-		query_parser.create_query(queryName, query)
+		query_parser.create_query(queryName, query, commandsFile)
 
 def run_reload():
 	print 'Are you sure you want to reload default queries? (y/n)'
 	answer = raw_input()
 	if answer == 'y' or answer == 'Y':
 		print '-Reloading default queries-'
-		query_parser.load_in_base()
+		query_parser.load_in_base(baseCommandsFile, commandsFile)
 		print '-Default list loaded-'
 
 # Deletes a stored query 
 # Rather than finding the query in the file and removing it, the file is recreated and all the queries are written back in again
 # but without the deleted one 
 def run_delete(queryName):
-	queries = query_parser.get_queries()
+	queries = query_parser.get_queries(commandsFile)
 	# Attempt to remove the query with that name from the internal dictionary
 	if queries.pop(queryName, None) is None:
 		print 'A query by that name does not exist, please type in print to see the list of available queries.'
 	else:
-		query_parser.load_in_queries(queries)
+		query_parser.load_in_queries(queries, commandsFile)
 		print queryName + ' has been deleted'
 
 # Exports the .db file into .csv files. Calls a library script
+# NOTE: Make sure Dockerfile is setup correctly to clone the convert-db-to-csv.sh file into correct location so it can be used.
 def run_export():
-	print 'Exporting database to csv files in volume: /usr/share/jira'
-	output = subprocess.call(["/lib/convert-db-to-csv/convert-db-to-csv.sh", "/usr/share/jira/database.db", "/usr/share/jira"])
-	print "Export exited with code: " + str(output)
+	print '\n-Exporting database to csv files in volume: ' + tableFolder + '-'
+	if not os.path.exists(tableFolder):
+		os.makedirs(tableFolder)
+	subprocess.call([dbToCsvScript, databaseFile, tableFolder])
 
 def run_list():
-	print 'Fetching list of all tables:'
+	print '-Fetching list of all tables-'
 	tables = jira_database.get_table_names()
 	for table in tables:
 		print table.__str__().strip("'()[],")[2:]

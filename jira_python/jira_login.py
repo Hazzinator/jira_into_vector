@@ -15,7 +15,7 @@ def login():
 	jira = None
 	try:
 		# uses the basic authentication to login to the jira server and return a jira object
-		jira = JIRA(options=jira_options, basic_auth=('harry.bassettbutt@gohubble.com', 'golden halo power'))
+		jira = JIRA(options=jira_options, basic_auth=(username, password))
 	except JIRAError as e:
 		print 'Login error - did you enter the right credentials?'
 		pass
