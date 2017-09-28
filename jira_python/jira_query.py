@@ -7,14 +7,13 @@ import getpass
 import sys
 import jira_database as database
 
-# runs a jql command and updates the corresponding database
+# Runs a JQL search query and updates the corresponding database
 def run_command(jira, queryName, query):
-	# query is in the form of a tuple - change to a class later
-	# query[1] is the JQL query
 	issues = jql_search(query, jira)
-	length = len(issues)			
+	length = len(issues)
+	print 'JQL Search completed. Issues found: ' + str(length)	
+	# Turns the issue object into a list of string tuples and uses this to update the database		
 	if (length != 0):
-		# query[0] is the name of the jql query and also the name of the table in the database
 		formattedIssues = parse_issues(issues)
 		database.update_table(queryName, formattedIssues)
 
@@ -48,7 +47,7 @@ def parse_issues(issues):
 		priority = none_creator(fields.priority, 'name')
 		status = none_creator(fields.status, 'name')
 		hubbleTeam = fields.project.name
-		# both of these are in ISO 8601 format
+		# Both of these are in ISO 8601 format, have to convert them
 		lastUpdated = datetime_format(fields.updated)
 		created = datetime_format(fields.created)
 		issueList.append((snapshot, key, summary, status, assignee, priority, created, hubbleTeam, lastUpdated))
@@ -78,7 +77,6 @@ def jql_search(query, jira):
 			# add the contents of the searched list to the main list
 			issues += searchedIssues
 			blockNum += 1
-		print 'JQL Search completed. Issues found: ' + str(issuesLen)
 	except JIRAError as e:
 		print(e.text)
 	return issues

@@ -60,7 +60,7 @@ def run_query(queryName):
 		query = queries[queryName]
 		jira_query.run_command(jira, queryName, query)
 	except KeyError:
-		print 'A query by that name does not exist, please type in print_q to see the list of queries.'
+		print 'A query by that name does not exist, type print to see the list of available queries.'
 
 # Runs the command to store a new text file
 def run_create(queryName):
@@ -161,4 +161,5 @@ def check_input(data):
 
 # START
 jira = jira_login.login()
-start()
+if jira is not None:
+	start()

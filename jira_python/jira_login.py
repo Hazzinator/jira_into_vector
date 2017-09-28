@@ -16,9 +16,7 @@ def login():
 	try:
 		# uses the basic authentication to login to the jira server and return a jira object
 		jira = JIRA(options=jiraOptions, basic_auth=(username, password))
-	except JIRAError as e:
-		print 'Login error - did you enter the right credentials?'
-		pass
-		# exception not handled as only a print out is needed		
+	except Exception,e:
+		print 'Login error - check your credentials'	
 	return jira
 	

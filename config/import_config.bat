@@ -5,4 +5,4 @@ REM Username to log into the accelerator with
 set user=root
 
 REM Password to log into the accelerator with
-set pass=goldenhalo1
+set pass= 
