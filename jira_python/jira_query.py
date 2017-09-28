@@ -21,7 +21,7 @@ def run_command(jira, queryName, query):
 # If the object is none 
 def none_creator(field, property):
 	if field is None:
-		return 'None'
+		return None
 	else:
 		return getattr(field, property)
 

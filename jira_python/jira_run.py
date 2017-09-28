@@ -17,13 +17,13 @@ baseCommandsFile = installFolder + 'base_commands.txt'
 
 def start():
 	# list of options []
-	inloop = True
-	while (inloop):
+	inLoop = True
+	while (inLoop):
 		print '\nType help for a list of commands.'
 		sys.stdout.write(': ')
 		data = raw_input()
 		# Parse out arguments
-		inloop = check_input(data)
+		inLoop = check_input(data)
 
 def exit():
 	sys.exit(0)
@@ -49,7 +49,7 @@ def display_help():
 	print 'delete "name" : deletes the query with the specified name'
 	print 'reload : loads a default set of queries into the query storage'
 	print 'list : lists the names of all the tables currently in the database file'
-	print 'drop "table": drops a table in the database'
+	print 'drop "table": drops a table in the database and the corresponding csv file if it exists'
 	print 'export : exports the db file into multiple csv files'
 	print 'bash : execute a shell on the container'
 
@@ -111,6 +111,10 @@ def run_list():
 # Removes a table in the database file
 def run_drop(tableName):
 	jira_database.drop_table(tableName)
+	file = tableFolder+"/"+tableName+".csv"
+	if os.path.exists(file):
+		os.remove(file)
+		print "-"+tableName+".csv removed-"
 
 # Exports the .db file into .csv files
 def run_bash():
@@ -155,5 +159,6 @@ def check_input(data):
 		second_arg_check(split, run_delete)
 	return True
 
+# START
 jira = jira_login.login()
 start()

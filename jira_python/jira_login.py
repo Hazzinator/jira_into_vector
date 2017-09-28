@@ -11,11 +11,11 @@ def login():
 	# password is entered securely
 	password = getpass.getpass(prompt='What is your password? : ')
 	# sets up the server to connect to
-	jira_options = {'server': 'https://insightsoftware.atlassian.net'}
+	jiraOptions = {'server': 'https://insightsoftware.atlassian.net'}
 	jira = None
 	try:
 		# uses the basic authentication to login to the jira server and return a jira object
-		jira = JIRA(options=jira_options, basic_auth=(username, password))
+		jira = JIRA(options=jiraOptions, basic_auth=(username, password))
 	except JIRAError as e:
 		print 'Login error - did you enter the right credentials?'
 		pass
