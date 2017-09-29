@@ -56,23 +56,27 @@ def display_help():
 # Runs the a saved JQL query and stores the results in the database file.
 def run_query(queryName):
 	queries = query_parser.get_queries(commandsFile)
-	try:
+	if queryName in queries:
 		query = queries[queryName]
 		jira_query.run_command(jira, queryName, query)
-	except KeyError:
-		print 'A query by that name does not exist, type print to see the list of available queries.'
+	else:
+		print 'Query ' + queryName +' does not exist, type print to see the list of available queries.'
 
 # Runs the command to store a new text file
 def run_create(queryName):
-	print 'Creating a query with name -' + queryName + '-'
-	print 'Please enter the JQL statement to bind to it below:'
-	query = raw_input()
-	print 'The query you entered is:'
-	print query
-	print '\nIs this correct? (y/n)'
-	answer = raw_input()
-	if answer == 'Y' or answer == 'y':
-		query_parser.create_query(queryName, query, commandsFile)
+	queries = query_parser.get_queries(commandsFile)
+	if queryName in queries:
+		print 'Query ' + queryName +' already exists, please delete the existing one first.'
+	else:
+		print 'Creating a query with name -' + queryName + '-'
+		print 'Please enter the JQL statement to bind to it below:'
+		query = raw_input()
+		print 'The query you entered is:'
+		print query
+		print '\nIs this correct? (y/n)'
+		answer = raw_input()
+		if answer == 'Y' or answer == 'y':
+			query_parser.create_query(queryName, query, commandsFile)
 
 def run_reload():
 	print 'Are you sure you want to reload default queries? (y/n)'
@@ -94,10 +98,19 @@ def run_delete(queryName):
 		query_parser.load_in_queries(queries, commandsFile)
 		print queryName + ' has been deleted'
 
+
+# Runs export on a singular table inside the database
+# Exports a singular table for the database file
+def run_export(tableName):
+	print '\n-Exporting table ' + tableName + ' '
+	if not os.path.exists(tableFolder):
+		os.makedirs(tableFolder)
+	subprocess.call([dbToCsvScript, databaseFile, tableFolder, tableName])
+
 # Exports the .db file into .csv files. Calls a library script
 # NOTE: Make sure Dockerfile is setup correctly to clone the convert-db-to-csv.sh file into correct location so it can be used.
-def run_export():
-	print '\n-Exporting database to csv files in volume: ' + tableFolder + '-'
+def run_export_all():
+	print '\n-Exporting all tables into volume: ' + tableFolder + '-'
 	if not os.path.exists(tableFolder):
 		os.makedirs(tableFolder)
 	subprocess.call([dbToCsvScript, databaseFile, tableFolder])
@@ -144,7 +157,13 @@ def check_input(data):
 	elif firstArg == 'printj':
 		printj_queries()
 	elif firstArg == 'export':
-		run_export()
+		if len(split) > 1:
+			secondArg = split[1]
+			if secondArg != '':
+				print 'hello'
+				run_export(secondArg)
+		else:
+			run_export_all()
 	elif firstArg == 'bash':
 		run_bash()
 	elif firstArg == 'drop':

@@ -1,6 +1,6 @@
 @echo off
 rem Input your own username and password in place of "user" and "pass"
-set SESSION=scp://user:pass@10.13.1.171/
+set SESSION=scp://root:goldenhalo1@10.13.1.171/
 set REMOTE_PATH=/import/
  
 echo open %SESSION% >> script.tmp
