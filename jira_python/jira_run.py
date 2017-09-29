@@ -102,7 +102,7 @@ def run_delete(queryName):
 # Runs export on a singular table inside the database
 # Exports a singular table for the database file
 def run_export(tableName):
-	print '\n-Exporting table ' + tableName + ' '
+	print '\n-Exporting table ' + tableName + '-'
 	if not os.path.exists(tableFolder):
 		os.makedirs(tableFolder)
 	subprocess.call([dbToCsvScript, databaseFile, tableFolder, tableName])
@@ -160,7 +160,6 @@ def check_input(data):
 		if len(split) > 1:
 			secondArg = split[1]
 			if secondArg != '':
-				print 'hello'
 				run_export(secondArg)
 		else:
 			run_export_all()
