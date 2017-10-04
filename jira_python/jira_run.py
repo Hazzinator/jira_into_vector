@@ -51,6 +51,7 @@ def display_help():
 	print 'list : lists the names of all the tables currently in the database file'
 	print 'drop "table": drops a table in the database and the corresponding csv file if it exists'
 	print 'export : exports the db file into multiple csv files'
+	print 'export "name": exports a select table in the db file into a csv'
 	print 'bash : execute a shell on the container'
 
 # Runs the a saved JQL query and stores the results in the database file.
