@@ -4,6 +4,7 @@ This tool comes in two parts:
 container. This folder will have to be set up as a volume so the data is persistent and can be accessed from the 
 host machine. The results will be put into database file. Using the export command, the program can export one table
 at a time or all the tables into .csv files.
+
 2. A script that will automatically move .csv files onto the Accelerator, provided you have the username, password
 and ip address of the Accelerator.
 
